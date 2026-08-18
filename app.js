@@ -27,7 +27,7 @@ function init() {
     dateInput.value = today;
     filterDate.value = today;
     
-    // 저장된 데이터 로드
+    // 저���된 데이터 로드
     loadData();
     
     // 반 드롭다운 업데이트
@@ -36,10 +36,7 @@ function init() {
     
     // 이벤트 리스너
     gradeSelect.addEventListener('change', updateClassOptions);
-    filterGrade.addEventListener('change', () => {
-        updateFilterClassOptions();
-        filterRecords();
-    });
+    filterGrade.addEventListener('change', updateFilterClassOptions);
     filterClass.addEventListener('change', filterRecords);
     filterDate.addEventListener('change', filterRecords);
     
@@ -48,8 +45,8 @@ function init() {
     exportBtn.addEventListener('click', exportToGoogleSheets);
     searchBtn.addEventListener('click', filterRecords);
     
-    // 렌더링
-    renderRecords();
+    // 초기 조회
+    filterRecords();
 }
 
 // 반 옵션 업데이트
@@ -116,7 +113,6 @@ function saveRecord() {
     
     state.records.push(record);
     saveData();
-    renderRecords();
     resetForm();
     
     showNotification('저장되었습니다!');
@@ -137,7 +133,7 @@ function deleteRecord(id) {
     if (confirm('이 기록을 삭제하시겠습니까?')) {
         state.records = state.records.filter(r => r.id !== id);
         saveData();
-        renderRecords();
+        filterRecords();
         showNotification('삭제되었습니다.');
     }
 }
@@ -263,7 +259,7 @@ function confirmClear() {
     if (confirm('정말 모든 데이터를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.')) {
         state.records = [];
         saveData();
-        renderRecords();
+        filterRecords();
         showNotification('모든 데이터가 삭제되었습니다.');
     }
 }
