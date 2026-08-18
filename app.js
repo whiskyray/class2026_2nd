@@ -36,7 +36,10 @@ function init() {
     
     // 이벤트 리스너
     gradeSelect.addEventListener('change', updateClassOptions);
-    filterGrade.addEventListener('change', updateFilterClassOptions);
+    filterGrade.addEventListener('change', () => {
+        updateFilterClassOptions();
+        filterRecords();
+    });
     saveBtn.addEventListener('click', saveRecord);
     clearBtn.addEventListener('click', confirmClear);
     exportBtn.addEventListener('click', exportToGoogleSheets);
@@ -77,6 +80,9 @@ function updateFilterClassOptions() {
             option.textContent = `${cls}반`;
             filterClass.appendChild(option);
         });
+    } else {
+        // 학년을 선택 해제하면 반도 초기화
+        filterClass.value = '';
     }
 }
 
@@ -174,9 +180,38 @@ function getFilteredRecords() {
     });
 }
 
+// 필터 상태 표시
+function getFilterStatus() {
+    const filters = [];
+    
+    if (filterDate.value) {
+        const date = new Date(filterDate.value + 'T00:00:00');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        filters.push(`📅 ${date.getFullYear()}-${month}-${day}`);
+    }
+    
+    if (filterGrade.value) {
+        filters.push(`${filterGrade.value}학년`);
+    }
+    
+    if (filterClass.value) {
+        filters.push(`${filterClass.value}반`);
+    }
+    
+    return filters.length > 0 ? `✨ 필터: ${filters.join(', ')}` : '📋 전체 기록';
+}
+
 // 기록 렌더링
 function renderRecords() {
     const filtered = getFilteredRecords();
+    const filterStatus = getFilterStatus();
+    
+    // 필터 상태 표시
+    const listHeader = document.querySelector('.list-section h2');
+    if (listHeader) {
+        listHeader.textContent = `${filterStatus}`;
+    }
     
     if (filtered.length === 0) {
         recordsList.innerHTML = '<div class="empty-message">기록이 없습니다.</div>';
@@ -204,6 +239,11 @@ function renderRecords() {
     `).join('');
 }
 
+// 필터 적용 함수
+function filterRecords() {
+    renderRecords();
+}
+
 // 데이터 저장 (LocalStorage)
 function saveData() {
     localStorage.setItem('classProgressData', JSON.stringify(state.records));
@@ -229,7 +269,9 @@ function confirmClear() {
 
 // Google Sheets로 내보내기
 function exportToGoogleSheets() {
-    if (state.records.length === 0) {
+    const dataToExport = getFilteredRecords();
+    
+    if (dataToExport.length === 0) {
         alert('내보낼 데이터가 없습니다.');
         return;
     }
@@ -237,7 +279,7 @@ function exportToGoogleSheets() {
     // CSV 데이터 생성
     let csv = '날짜,학년,반,교시,진도(페이지),특이사항\n';
     
-    state.records.forEach(record => {
+    dataToExport.forEach(record => {
         const date = formatDate(record.date);
         const memo = `"${record.memo.replace(/"/g, '""')}"`;
         csv += `${date},${record.grade},${record.class},${record.period},${record.progress},${memo}\n`;
@@ -249,7 +291,7 @@ function exportToGoogleSheets() {
     
     // 클립보드에 CSV 복사
     navigator.clipboard.writeText(csv).then(() => {
-        alert(`데이터가 클립보드에 복사되었습니다!\n\n다음 단계:\n1. "확인" 버튼을 누르면 Google Sheets가 열립니다\n2. 새로운 시트에서 Ctrl+V (또는 Cmd+V)를 눌러 붙여넣으세요`);
+        alert(`데이터가 클립보드에 복사되었습니다!\n\n다음 단계:\n1. "확인" 버튼을 누르면 Google Sheets가 열립니다\n2. 새로운 시트에서 Ctrl+V (또는 Cmd+V)를 눌러 붙여넣기\n3. 자유롭게 편집하고 관리하세요!`);
         window.open(sheetsUrl, '_blank');
     }).catch(() => {
         // 클립보드 실패 시 대체 방법
