@@ -170,6 +170,11 @@ button {
     width: 100%;
 }
 
+.filter-group #searchBtn {
+    grid-column: 1 / -1;
+    margin-top: 0;
+}
+
 /* 기록 목록 */
 .records-list {
     display: flex;
@@ -244,6 +249,10 @@ button {
 @media (max-width: 480px) {
     .filter-group {
         grid-template-columns: 1fr;
+    }
+    
+    .filter-group #searchBtn {
+        grid-column: 1;
     }
     
     header {
