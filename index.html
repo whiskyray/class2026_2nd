@@ -1,78 +1,3 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4CAF50">
-    <meta name="description" content="수업 진도 관리 앱">
-    <title>수업 진도 관리</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%234CAF50' width='192' height='192'/><text x='50%' y='50%' font-size='100' fill='white' text-anchor='middle' dy='.3em'>📚</text></svg>">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>📚 수업 진도 관리</h1>
-            <div class="header-buttons">
-                <button id="clearBtn" class="btn-secondary" title="전체 데이터 삭제">🗑️</button>
-                <button id="exportBtn" class="btn-secondary" title="Google Sheets로 내보내기">📊</button>
-            </div>
-        </header>
-
-        <main>
-            <!-- 입력 폼 -->
-            <section class="form-section">
-                <h2>수업 정보 입력</h2>
-                
-                <div class="form-group">
-                    <label for="date">📅 날짜</label>
-                    <input type="date" id="date" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="grade">학년</label>
-                    <select id="grade" required>
-                        <option value="">학년 선택</option>
-                        <option value="2">2학년</option>
-                        <option value="1">1학년</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="class">반</label>
-                    <select id="class" required>
-                        <option value="">반 선택</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="period">🕐 교시 (1~7)</label>
-                    <select id="period" required>
-                        <option value="">교시 선택</option>
-                        <option value="1">1교시</option>
-                        <option value="2">2교시</option>
-                        <option value="3">3교시</option>
-                        <option value="4">4교시</option>
-                        <option value="5">5교시</option>
-                        <option value="6">6교시</option>
-                        <option value="7">7교시</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="progress">📄 진도 (페이지)</label>
-                    <input type="number" id="progress" placeholder="예: 45" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="memo">📝 특이사항 메모</label>
-                    <textarea id="memo" placeholder="수업 중 특이사항을 입력하세요..."></textarea>
-                </div>
-
-                <button id="saveBtn" class="btn-primary">저장</button>
-            </section>
-
             <!-- 데이터 목록 -->
             <section class="list-section">
                 <h2>저장된 기록</h2>
@@ -86,18 +11,7 @@
                     <select id="filterClass">
                         <option value="">전체 반</option>
                     </select>
+                    <button id="searchBtn" class="btn-primary">🔍 조회</button>
                 </div>
                 <div id="recordsList" class="records-list"></div>
             </section>
-        </main>
-    </div>
-
-    <script src="app.js"></script>
-    <script>
-        // PWA 서비스 워커 등록
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
-</body>
-</html>
