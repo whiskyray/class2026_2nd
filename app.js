@@ -14,11 +14,11 @@ const memoInput = document.getElementById('memo');
 const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
 const exportBtn = document.getElementById('exportBtn');
+const searchBtn = document.getElementById('searchBtn');
 const recordsList = document.getElementById('recordsList');
 const filterDate = document.getElementById('filterDate');
 const filterGrade = document.getElementById('filterGrade');
 const filterClass = document.getElementById('filterClass');
-const filterClassLabel = document.getElementById('filterClass');
 
 // 초기화
 function init() {
@@ -40,12 +40,13 @@ function init() {
         updateFilterClassOptions();
         filterRecords();
     });
+    filterClass.addEventListener('change', filterRecords);
+    filterDate.addEventListener('change', filterRecords);
+    
     saveBtn.addEventListener('click', saveRecord);
     clearBtn.addEventListener('click', confirmClear);
     exportBtn.addEventListener('click', exportToGoogleSheets);
-    filterDate.addEventListener('change', filterRecords);
-    filterGrade.addEventListener('change', filterRecords);
-    filterClass.addEventListener('change', filterRecords);
+    searchBtn.addEventListener('click', filterRecords);
     
     // 렌더링
     renderRecords();
@@ -286,7 +287,6 @@ function exportToGoogleSheets() {
     });
     
     // Google Sheets Import URL
-    const encoded = encodeURIComponent(csv);
     const sheetsUrl = `https://docs.google.com/spreadsheets/u/0/create?title=수업진도관리_${new Date().toISOString().split('T')[0]}`;
     
     // 클립보드에 CSV 복사
